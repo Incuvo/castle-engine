@@ -1,0 +1,21 @@
+<li id="level-{{ ctx.level.id}}" class="media">
+  <label class="pull-left" for="colors-1-toggle-{{ ctx.level.id }}">
+    <input class="checkbox" type="checkbox" id="levels-toggle-{{ ctx.level.id }}" name="levels-{{ ctx.level.id }}" value="{{ ctx.level.id }}" />
+  </label>
+  <a class="pull-left thumbnail" href="/levels/{{ ctx.level.id }}" data-c-uri="levels/{{ ctx.level.id }}">
+    {# var thumbnailUrl = ctx.level.has('thumbnails') ? 'https://' + ctx.level.get('thumbnails')['default'] : "/assets/images/placeholder_60.png" }}
+    <img class="media-object" src="{{ thumbnailUrl }}" width=60 height=60>
+  </a>
+  <div class="media-body">
+    <h4 class="media-heading"><a class="name" href="/levels/{{ ctx.level.id }}" data-c-uri="levels/{{ ctx.level.id }}">{{- ctx.level.get('name') }}</a></h4>
+    {# var owner = ctx.level.get('owner') || { id : 'undefined' }; }}
+    <p class="description">{{- ctx.level.get('description') }}</p>
+    <p>By <a href="/users/{{ owner.id }}" data-c-uri="users/{{ owner.id }}">{{ owner.displayname }}</a></p>
+
+    {# flags = ctx.level.get('flags') || []; if (flags.length > 0) { }}
+    <p>Flags:{{flags}}</p>
+    {#} }}
+
+
+  </div>
+</li>

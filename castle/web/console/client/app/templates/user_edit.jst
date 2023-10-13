@@ -1,0 +1,42 @@
+<div class="row-fluid">
+  <div class="span12">
+    <form class="form-horizontal">
+      <div class="control-group">
+        <label class="control-label" for="username">Username</label>
+        <div class="controls">
+          <input id="username" class="input-large" type="text" value="{{ ctx.user.get('username') }}"/>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="displayname">Displayname</label>
+        <div class="controls">
+          <span id="displayname" class="input-large uneditable-input">{{ ctx.user.get('displayname') }}</span>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="password">Password</label>
+        <div class="controls">
+          <input type="password" id="password" class="input-large" name="password" placeholder="password">
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="email">E-mail</label>
+        <div class="controls">
+          <input id="email" class="input-large" type="text" value="{{ ctx.user.get('email') }}"/>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="Roles">Roles</label>
+        <div class="controls">
+          {# var roles = ctx.user.get('roles') || [] }}
+          <input id="roles" class="input-large" type="text" value="{{ roles.join(', ') }}" placeholder="Comma-separated list of roles"/>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="form-actions">
+  <button id="save-btn" class="btn btn-primary">Save changes</button>
+  <button id="cancel-btn" class="btn">Cancel</button>
+  <button id="delete-btn" class="btn btn-danger pull-right">Delete forever</button>
+</div>

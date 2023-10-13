@@ -1,0 +1,604 @@
+<html>
+<body>
+<table>
+    <tr>
+      <th>Resource</th>
+      <th>Description</th>
+    </tr>
+    <tr><td colspan="2"><strong>OAuth</strong></td></tr>
+    <tr>
+      <td>POST <br/> /v1/auth</td>
+      <td>Authenticate with Castle API. See <strong>Authentication</strong> section.</td>
+    </tr>
+    <tr><td colspan="2"><strong>Users</strong></td></tr>
+    <tr>
+      <td>POST <br/> /v1/users</td>
+      <td>Create a new user account. See <strong>Authentication</strong> section.</td>
+    </tr>
+    <tr>
+      <td>GET <br/> /v1/users/USER_ID</td>
+      <td>
+        <p>Get profile data of user identifiable by <code>USER_ID</code>.</p>
+        <p>Setting <code>USER_ID</code> to <code>me</code> will return acting user's profile data.</p>
+        <h5>Examples</h5>
+        <pre>
+GET /v1/users/502bfee5e9b518d27a000005
+
+{
+    "user": {
+      "id": "502bfee5e9b518d27a000005",
+      "email": "edmundo@opera.com",
+      "username": "edmundo007",
+      "joined": 1353503890.569892,
+    }
+}
+        </pre>
+      </td>
+    </tr>
+    <tr>
+      <td>PUT <br/> /v1/users/USER_ID</td>
+      <td>
+        <p>Update user profile data.</p>
+        <h5>Examples</h5>
+        <pre>
+PUT /v1/users/502bfee5e9b518d27a000005 {
+    "username": "edmundo",
+    "email": "edmundo.correa@opera.com",
+    "password": "12345"
+}
+
+HTTP 200
+        </pre>
+      </td>
+    </tr>
+    <tr>
+      <td>DELETE <br/> /v1/users/USER_ID_OR_ME</td>
+      <td>
+        <p>Completely remove target user account, including all associated data (e.g. levels).</p>
+        <p>Only profile owner and administrator can do that.</p>
+        <p>Specify <code>me</code> value to delete current user's account.</p>
+        <h5>Examples</h5>
+        <pre>
+DELETE /v1/users/502bfee5e9b518d27a000005
+
+{
+    "user": {
+      "id": USER_ID
+    }
+}
+        </pre>
+      </td>
+    </tr>
+    <tr>
+      <td>GET <br/> /v1/users/USER_ID/levels</td>
+      <td>
+        <p>Get user levels.</p>
+        <p>Only levels visible to the acting user will be returned.</p>
+        <p>Level information format is the same as for <code>/v1/levels</code>.</p>
+        <h5>Examples</h5>
+        <pre>
+GET /v1/users/503419d1e70812986d0003d9/levels
+
+{
+    "levels": [
+        {
+          "castle_id": "xyz",
+          "id": "502bfee5e9b518d27a000005",
+          "owner": "503419d1e70812986d0003d9",
+          "original": null,
+          "name": "Awesome Rainbows and Ponnies"
+          ...
+        },
+    ]
+}
+        </pre>
+      </td>
+    </tr>
+    <tr><td colspan="2"><strong>Levels</strong></td></tr>
+    <tr>
+      <td>GET <br/> /v1/levels</td>
+      <td>
+        <p>List available levels.</p>
+        <p>By default returns all levels visible to the acting user, i.e. private, public and friend's levels.</p>
+        <p>Thumbnail URLs are given in protocol-less format. Use HTTPS or HTTP as needed.</p>
+        <h5>Filters</h5>
+        <p>The following filter queries are supported:</p>
+        <ul>
+          <li><code>filter</code>: A list of one or more <code>|</code>-separated values in [<code>public</code>, <code>friends</code>, <code>me</code>]. Works as OR query.
+          <li><code>tag</code>: A list of one or more <code>|</code>-separated tags. Works like OR query.
+          <li><code>gameplay</code>: A list of one or more <code>|</code>-separated game play types. Works like OR query.
+          <li><code>name</code>: A regular expression that is used to filter matching level names.
+        </ul>
+        <p>Specifying multiple filter types is an equivalent of an AND operator.</p>
+        <h5>Populate</h5>
+        <p>The <code>populate</code> parameter instructs the server to populate specified reference fields with referenced objects.</p>
+        <p>Currently only <code>owner</code> field is supported. For example:</p>
+        <pre>?populate=owner</pre>
+        <h5>Pagination</h5>
+        <p>By default the list of levels is capped at 1000000. To retrieve more results or enable pagination, specify the following query parameters:</p>
+        <ul>
+          <li><code>page</code>: Page number (defaults to 1).
+          <li><code>per_page</code>: Number of results per page (defaults to 1000000).
+        </ul>
+        <p>For example:</p>
+        <pre>?per_page=2000&page=3</pre>
+        <h5>Fields</h5>
+        <p>When specified as <code>fields</code> query parameter, allows for chosing which properies should be returned. The properties should be specified as comma-separated list of property names, for example:</p>
+        <pre>?fields=name,description,created</pre>
+        <p>Note that <code>id</code> property is mandatory and will be retured even if not specified in the list.</p>
+        <h5>Examples</h5>
+        <pre>
+GET /v1/levels?filter=me|friends&tag=easy&gameplay=puzzle&name=^Awesome
+
+{
+    "levels": [
+        {
+          "castle_id": "xyz",
+          "id": "502bfee5e9b518d27a000005",
+          "owner": "503419d1e70812986d0003d9",
+          "original": null, //ID of the original level
+          "name": "Awesome Rainbows and Ponnies"
+          "description": "",
+          "gameplay": "puzzle",
+          "visibility": "friends",
+          "created": 1353503890,
+          "updated": 1353503890,
+          "tags": ['easy', 'kids'],
+          "thumbnails": {
+            "default": "castle-levels.s3.amazonaws.com/502bfee5e9b518d27a000005/thumbnails/default.jpg"
+          },
+          "comments": 3,
+          "plays": 5,
+          "downloads": 3,
+          "likes": 4,
+      },
+    ]
+}
+        </pre>
+      </td>
+    </tr>
+    <tr>
+      <td>POST <br/> /v1/levels</td>
+      <td>
+        <p>Create a new level.</p>
+        <p>Level data can be either JSON object or a string (i.e. XML string).</p>
+        <h5>Examples</h5>
+        <pre>
+POST /v1/levels {
+    "castle_id": "xyz",
+    "name": "Even more awesome Rainbows and Ponies", //Not restricted
+    "description": "Your kids will love it!", //Not restricted
+    "original": ORIGINAL_LEVEL_ID, //ID returned by the API, not Castle's ID!
+    "gameplay": "puzzle", //Not restricted
+    "visibility": "public", //One of: private, friends, public
+    "tags": ['easy', 'kids', 'funny'],
+    "data": LEVEL_DATA //BASE64-encoded compressed (gzip) data
+}
+
+{
+  "level": {
+      "id": LEVEL_ID,
+      "created": UNIX_TIMESTAMP_INT,
+      "updated": UNIX_TIMESTAMP_INT,
+  }
+}
+        </pre>
+      </td>
+    </tr>
+
+    <tr>
+      <td>GET <br/> /v1/levels/LEVEL_ID</td>
+      <td>
+        <p>Get level information, including level data.</p>
+        <p>Thumbnail URLs are given in protocol-less format. Use HTTPS or HTTP as needed.</p>
+        <p>Level data is stored as a GZIP file, hence <code>Content-Encoding</code> will always be <code>gzip</code>/</p>
+        <h5>Include</h5>
+        <p>The <code>include</code> parameter tell the server to include certain fields in the response. Nultiple values should be comma-separated.</p>
+        <p>For example:</p>
+        <pre>?include=data</pre>
+        <p>Currentnly only <code>data</code> is supported.</p>
+        <h5>Examples</h5>
+        <pre>
+GET /v1/levels/502bfee5e9b518d27a000005
+
+{
+  "level": {
+      "id": "502bfee5e9b518d27a000005",
+      "owner": "503419d1e70812986d0003d9",
+      "original": null,
+      "name": "Awesome Rainbows and Ponies"
+      "description": "",
+      "gameplay": "puzzle",
+      "visibility": "friends",
+      "created": 1353503890,
+      "updated": 1353503890,
+      "tags": ['easy', 'kids'],
+      "thumbnails": {
+          "default": "castle-levels.s3.amazonaws.com/502bfee5e9b518d27a000005/thumbnails/default.jpg"
+      },
+      "data_url": "castle-levels.s3.amazonaws.com/502bfee5e9b518d27a000005/data"
+      "comments": 3,
+      "plays": 5,
+      "downloads": 3,
+      "likes": 4,
+  }
+}
+        </pre>
+        <pre>
+GET /v1/levels/502bfee5e9b518d27a000005?include=data
+
+{
+  "level": {
+      "id": "502bfee5e9b518d27a000005",
+      "owner": "503419d1e70812986d0003d9",
+      "original": null,
+      "name": "Awesome Rainbows and Ponies"
+      "description": "",
+      "gameplay": "puzzle",
+      "visibility": "friends",
+      "created": 1353503890,
+      "updated": 1353503890,
+      "tags": ['easy', 'kids'],
+      "thumbnails": {
+          "default": "castle-levels.s3.amazonaws.com/502bfee5e9b518d27a000005/thumbnails/default.jpg"
+      },
+      "data": BASE64_GZIP_DATA
+      "comments": 3,
+      "plays": 5,
+      "downloads": 3,
+      "likes": 4,
+  }
+}
+        </pre>
+      </td>
+    </tr>
+    <tr>
+      <td>PUT <br/> /v1/levels/LEVEL_ID</td>
+      <td>
+        <p>Update level information.</p>
+        <p>Only include properties that are meant to be changed. See POST request to <code>/v1/levels</code> for the list of supported properties.</p>
+        <h5>Examples</h5>
+        <pre>
+PUT /v1/levels/502bfee5e9b518d27a000005 {
+    "name": "Even more awesome Rainbows and Ponies",
+    "description": "Your kids will love it!",
+    "gameplay": "",
+    "visibility": "public",
+    "tags": ['easy', 'kids', 'funny'],
+    "data": BASE64_GZIP_DATA
+}
+
+HTTP 200
+        </pre>
+      </td>
+    </tr>
+    <tr>
+      <td>DELETE <br/> /v1/levels/LEVEL_ID</td>
+      <td>
+        <p>Completely remove target level, including all associated data.</p>
+        <p>Only profile owner and administrator can do that.</p>
+        <h5>Examples</h5>
+        <pre>
+DELETE /v1/levels/502bfee5e9b518d27a000005
+
+HTTP 200
+        </pre>
+      </td>
+    </tr>
+    <tr>
+      <td>PUT <br/> /v1/levels/LEVEL_ID/thumbnail</td>
+      <td>
+        <p>Update thumbnail image of the level.</p>
+        <p>Include the image data in the request's body. Requires correct <code>Content-Length</code> and <code>Content-Type</code> (e.g. <code>image/jpeg</code>) header values.</p>
+        <p>Thumbnail URLs are given in protocol-less format. Use HTTPS or HTTP as needed.</p>
+        <h5>Examples</h5>
+        <pre>
+PUT /v1/levels/502bfee5e9b518d27a000005/thumbnail BINARY_IMAGE_DATA
+
+{
+    "thumbnails": {
+        "default": "castle-levels.s3.amazonaws.com/502bfee5e9b518d27a000005/thumbnails/default.jpg""
+    }
+}
+        </pre>
+      </td>
+    </tr>
+    <tr><td colspan="2"><strong>Level comments</strong></td></tr>
+    <tr>
+      <td>GET <br/> /v1/levels/LEVEL_ID/comments</td>
+      <td>
+        <p>List level comments.</p>
+        <h5>Examples</h5>
+        <pre>
+GET /v1/levels/502bfee5e9b518d27a000005/comments
+
+{
+    "comments": [
+      {
+        "id": "609419d1e70812986d000000",
+        "owner": "503419d1e70812986d0003d9",
+        "level": "502bfee5e9b518d27a000005",
+        "content": "This level is awesome!",
+        "created": 1353509890,
+        "flags": []
+      }
+    ]
+}
+        </pre>
+      </td>
+    </tr>
+    <tr>
+      <td>POST <br/> /v1/levels/LEVEL_ID/comments</td>
+      <td>
+        <p>Comment on the level.</p>
+        <h5>Examples</h5>
+        <pre>
+POST /v1/levels/502bfee5e9b518d27a000005/comments {
+    "content": "This level is awesome!", //Not restricted
+}
+
+{
+    "comment": {
+        "id": "609419d1e70812986d000000",
+        "owner": "503419d1e70812986d0003d9", //User ID
+        "level": "502bfee5e9b518d27a000005",
+        "content": "This level is awesome!",
+        "created": 1353509890,
+        "flags": []
+    }
+}
+        </pre>
+      </td>
+    </tr>
+    <tr>
+      <td>DELETE <br/> /v1/levels/LEVEL_ID/comments/COMMENT_ID</td>
+      <td>
+        <p>Remove the comment.</p>
+        <p>Only comment owner and administrator can do that.</p>
+        <h5>Examples</h5>
+        <pre>
+DELETE /v1/levels/502bfee5e9b518d27a000005/comments/609419d1e70812986d000000
+
+HTTP 200
+        </pre>
+      </td>
+    </tr>
+    <tr><td colspan="2"><strong>Level likes</strong></td></tr>
+    <tr>
+      <td>GET <br/> /v1/levels/LEVEL_ID/likes</td>
+      <td>
+        <p>List level likes.</p>
+        <h5>Examples</h5>
+        <pre>
+GET /v1/levels/502bfee5e9b518d27a000005/likes
+
+{
+    "likes": [
+       {
+         "id": "129419d1e70812986d000000",
+         "owner": "503419d1e70812986d0003d9",
+         "level": "502bfee5e9b518d27a000005",
+         "created": 1353509890
+       }
+    ]
+}
+        </pre>
+      </td>
+    </tr>
+    <tr>
+      <td>POST <br/> /v1/levels/LEVEL_ID/likes</td>
+      <td>
+        <p>Like the level.</p>
+        <h5>Examples</h5>
+        <pre>
+POST /v1/levels/502bfee5e9b518d27a000005/likes
+
+{
+    "like": {
+       {
+         "id": "129419d1e70812986d000000",
+         "owner": "503419d1e70812986d0003d9",
+         "level": "502bfee5e9b518d27a000005",
+         "created": 1353509890
+       }
+    }
+}
+        </pre>
+      </td>
+    </tr>
+    <tr>
+      <td>DELETE <br/> /v1/levels/LEVEL_ID/likes/LIKE_ID_OR_ME</td>
+      <td>
+        <p>Un-like the level.</p>
+        <p>Only like owner and administrator can do that.</p>
+        <p>Specify <code>me</code> instead of like identifier to un-like the level for the acting user.</p>
+        <h5>Examples</h5>
+        <pre>
+DELETE /v1/levels/502bfee5e9b518d27a000005/likes/me
+
+HTTP 200
+        </pre>
+      </td>
+    </tr>
+    <tr><td colspan="2"><strong>Level downloads</strong></td></tr>
+    <tr>
+      <td>GET <br/> /v1/levels/LEVEL_ID/downloads</td>
+      <td>
+        <p>List level downloads.</p>
+        <h5>Examples</h5>
+        <pre>
+GET /v1/levels/502bfee5e9b518d27a000005/downloads
+
+{
+    "downloads": [
+       {
+         "id": "129419d1e70812986d000000", //Download ID
+         "owner": "503419d1e70812986d0003d9", //User ID
+         "level": "502bfee5e9b518d27a000005",
+         "created": 1353509890, //Time of the download
+         "version": 1353509790, //essentially Level.updated
+                                //property value at the time
+                                //of the download
+       }
+    ]
+}
+
+        </pre>
+      </td>
+    </tr>
+    <tr>
+      <td>DELETE <br/> /v1/levels/LEVEL_ID/downloads/DOWNLOAD_ID</td>
+      <td>
+        <p>Remove level download info.</p>
+        <p>Only download owner and administrator can do that.</p>
+        <h5>Examples</h5>
+        <pre>
+DELETE /v1/levels/502bfee5e9b518d27a000005/downloads/129419d1e70812986d000000
+
+HTTP 200
+      </pre>
+      </td>
+    </tr>
+</table>
+
+## Errors
+
+<table>
+    <tr>
+      <th>Type</th>
+      <th>Code</th>
+      <th>Description</th>
+    </tr>
+    <tr>
+      <td>INTERNAL_SERVER_ERROR</td>
+      <td>500</td>
+      <td><i>Something</i> went wrong on the server-side. Check server logs for details.</td>
+    </tr>
+    <tr>
+      <td>NOT_IMPLEMENTED</td>
+      <td>501</td>
+      <td>Requested feature is not implemented.</td>
+    </tr>
+    <tr>
+      <td>RESOURCE_NOT_FOUND</td>
+      <td>404</td>
+      <td>
+        <p>Requested resource was not found.</p>
+        <h5>Data</h5>
+        <pre>
+{
+  "name": RESOURCE_NAME,
+  "id": RESOURCE_ID
+}
+        </pre>
+      </td>
+    </tr>
+    <tr>
+      <td>URI_NOT_FOUND</td>
+      <td>404</td>
+      <td>Invalid URI or method.</td>
+    </tr>
+    <tr>
+      <td>UNAUTHORIZED</td>
+      <td>401</td>
+      <td>Unauthorized request. <code>access_token</code> or application credentials are missing.</td>
+    </tr>
+    <tr>
+      <td>AUTH_FAILED</td>
+      <td>401</td>
+      <td>Authentication failed (wrong credentials provided)</td>
+    </tr>
+    <tr>
+      <td>INVALID_PARAMETER</td>
+      <td>400</td>
+      <td>
+        <p>One or more request parameters have invalid values.</p>
+        <h5>Data</h5>
+        <pre>
+{
+  "params": [PARAMETERS]
+}
+        </pre>
+      </td>
+    </tr>
+    <tr>
+      <td>MISSING_PARAMETERS</td>
+      <td>400</td>
+      <td>
+        <p>One or more request parameters are missing.</p>
+        <h5>Data</h5>
+        <pre>
+{
+  "params": [PARAMETERS]
+}
+        </pre>
+      </td>
+    </tr>
+    <tr>
+      <td>ME_VALUE_REQUIRED</td>
+      <td>400</td>
+      <td>Expected "me" as resource identifier.</td>
+    </tr>
+    <tr>
+      <td>FORBIDDEN</td>
+      <td>403</td>
+      <td>Acting user or application are not allowed to access the resource.</td>
+    </tr>
+    <tr>
+      <td>INVALID_GRANT_TYPE</td>
+      <td>400</td>
+      <td>
+        <p>OAuth flow does not support given Grant Type.</p>
+        <h5>Data</h5>
+        <pre>
+{
+  "supported": [SUPPORTED_GRANT_TYPES]
+}
+        </pre>
+      </td>
+    </tr>
+    <tr>
+      <td>USER_EXISTS</td>
+      <td>400</td>
+      <td>
+        <p>User with given credentials already exists.</p>
+        <h5>Data</h5>
+        <p>Conflicting properties:</p>
+        <pre>
+{
+  "properties": {
+    PROPERTY: VALUE
+  }
+}
+        </pre>
+      </td>
+    </tr>
+    <tr>
+      <td>VALIDATION_ERROR</td>
+      <td>400</td>
+      <td>
+        <p>Provided values did not pass validation.</p>
+        <h5>Data</h5>
+        <p>Invalid properties:</p>
+        <pre>
+{
+  "properties": {
+    PROPERTY: [ERRORS]
+  }
+}
+        </pre>
+      </td>
+    </tr>
+    <tr>
+      <td>UPLOAD_ERROR</td>
+      <td>500</td>
+      <td>An error occurred whilst uploading data. Most likely an issue with external server (e.g. Amazon S3).</td>
+    </tr>
+    <tr>
+      <td>DOWNLOAD_ERROR</td>
+      <td>500</td>
+      <td>An error occurred whilst uploading data. Similar issue to <code>UPLOAD_ERROR</code>.</td>
+    </tr>
+</table>
+</body>
+</html>

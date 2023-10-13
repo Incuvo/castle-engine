@@ -1,0 +1,13 @@
+HTTP/1.0 503 Service Unavailable
+Cache-Control: no-cache
+Connection: close
+Content-Type: application/json
+
+{
+    "error": {
+        "type": "SERVICE_UNAVAILABLE",
+        "description": "Castle API is currently down for maintanance",
+        "uri": null,
+        "data": null
+    }
+}

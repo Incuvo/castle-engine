@@ -1,0 +1,34 @@
+doctype 5
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge,chrome=1")
+    meta(name="description", content="Innovation in creation")
+    meta(name="view-port", content="width=device-width")
+    title Castle Console
+    link(rel="author", type="text/plain", href="/humans.txt")
+    link(rel="stylesheet", href=assets['public/assets/css/castle.css'])
+    link(rel="stylesheet", href='//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/base/jquery-ui.css')
+    link(rel="shortcut icon", type="image/x-icon", href="/favicon.ico")
+    block css
+  body
+    block main
+    block scripts
+        script(src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js")
+        script
+            window.jQuery || document.write('<script src="/assets/js/vendor/jquery-1.8.3.min.js"><\/script>')
+        script
+        script(src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.2/underscore-min.js")
+            window._ || document.write('<script src="/assets/js/vendor/underscore-1.4.2.min.js"><\/script>')
+        script(src="//cdnjs.cloudflare.com/ajax/libs/underscore.string/2.3.0/underscore.string.min.js")
+        script
+            window._.str || document.write('<script src="/assets/js/vendor/underscore.string-2.3.0.min.js"><\/script>')
+        script(src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/0.9.9/backbone-min.js")
+        script
+            window.Backbone || document.write('<script src="/assets/js/vendor/backbone-0.9.9.min.js"><\/script>')
+
+        script(src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js")
+        script(src="/assets/js/castle.js")
+
+    script
+        var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']]; (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0]; g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js'; s.parentNode.insertBefore(g,s)}(document,'script'));

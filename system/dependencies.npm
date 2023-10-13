@@ -1,0 +1,21 @@
+less
+coffee-script
+connect
+express
+jade
+request
+hiredis
+redis
+mongodb --mongodb:native
+node-gearman
+awssum
+mongoose
+client-sessions
+bcrypt
+underscore
+underscore.string
+async
+csv
+mocha
+should
+zombie

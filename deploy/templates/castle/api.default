@@ -1,0 +1,9 @@
+export CASTLE_ENV=`python $CASTLE_SRC_HOME/deploy/bin/getTag.py $CASTLE_INSTANCE_ID $CASTLE_REGION environment $CASTLE_ENV`
+
+export NODE_ENV=$CASTLE_ENV
+
+export CASTLE_MONGODB_HOST=${CASTLE_MONGODB_HOST:=`python $CASTLE_SRC_HOME/deploy/bin/evalServiceEndPoint.py mongodb $CASTLE_REGION $CASTLE_ENV`}
+export CASTLE_REDIS_HOST=${CASTLE_REDIS_HOST:=`python $CASTLE_SRC_HOME/deploy/bin/evalServiceEndPoint.py redis $CASTLE_REGION $CASTLE_ENV`}
+
+LAUNCHER=coffee
+APP=castle/web/api/app.coffee

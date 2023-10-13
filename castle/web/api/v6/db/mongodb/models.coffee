@@ -1,0 +1,21 @@
+# Contains models definitions. See Mongoose documentation for technical details.
+mongoose = require 'mongoose'
+definition = require './schemas/definition'
+versionModule = require '../../routes/version'
+version = versionModule.api.version
+
+exports.FailedAuth = mongoose.model "FailedAuth_#{version}", require('./schemas/failed-auth'), 'failed.auth'
+exports.ServerConfig = mongoose.model "ServerConfig_#{version}", require('./schemas/server-config.coffee'), 'server.config'
+exports.Purchase = mongoose.model "Purchase_#{version}", require('./schemas/purchase.coffee'), 'purchases'
+exports.UserReport = mongoose.model "UserReport_#{version}", require('./schemas/user-report.coffee'), 'users.report'
+exports.UserProfile = mongoose.model "UserProfile_#{version}", require('./schemas/user-profile.coffee'), 'usersProfiles'
+exports.FightHistory = mongoose.model "FightHistory_#{version}", require('./schemas/fightHistory.coffee'), 'fightHistory'
+exports.RetentionHistory = mongoose.model "RetentionHistory_#{version}", require('./schemas/retentionHistory.coffee'), 'retentionHistory'
+exports.Balconomy = mongoose.model "Balconomy_#{version}", require('./schemas/balconomy.coffee'), 'balconomy'
+exports.Replay = mongoose.model "Replay_#{version}", require('./schemas/replay.coffee'), 'replays'
+exports.DefinitionCastle = mongoose.model "DefinitionCastle_#{version}", definition.castle, 'definition.castles'
+exports.DefinitionAchievement = mongoose.model "DefinitionAchievement_#{version}", definition.achievement, 'definition.achievements'
+exports.Inclusion = mongoose.model "Inclusion_#{version}", require('./schemas/inclusion.coffee'), 'inclusions'
+exports.Error = mongoose.model "Error_#{version}", require('./schemas/error.coffee'), 'errors'
+exports.Persistent= mongoose.model "Persistent_#{version}", require('./schemas/persistent.coffee'), 'persistent'
+exports.League = mongoose.model "League_#{version}", require('./schemas/league.coffee'), 'league'

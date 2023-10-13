@@ -1,0 +1,12 @@
+{# if (ctx.users.length) { }}
+<ul class="media-list">
+{# ctx.users.forEach(function(user) { }}
+  {{ ctx.templates.item({user: user}) }}
+{# }) }}
+</ul>
+<div class="pagination-centered">
+  <button id="more-btn" class="btn{# if (ctx.users.pagination.itemsTotal == ctx.users.length) { }} hide{# } }}"><i class="icon-double-angle-down"></i> More</button>
+</div>
+{# } else { }}
+<p class="info pagination-centered">No users found.</p>
+{# } }}

@@ -1,0 +1,50 @@
+HTTP/1.0 502 Bad Gateway
+Cache-Control: no-cache
+Connection: close
+Content-Type: text/html
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="">
+        <meta name="view-port" content="width=device-width">
+        <title>Castle Console</title>
+        <style>
+        body {
+            background: #404853;
+            font-family: Helvetica Neue
+        }
+
+        #container {
+            width: 1000px;
+            height: 200px;
+            position: absolute;
+
+            margin: -100px 0 0 -500px;
+            top: 50%;
+            left: 50%;
+
+            text-align: center
+        }
+
+        #header {
+            font-size: 48px
+        }
+
+        #code {
+            color: #8C9198;
+        }
+
+        #title {
+            color: #fff
+        }
+        </style>
+    </head>
+    <body>
+        <div id="container">
+            <h1 id="header"><span id="code">502</span>//<span id="title">Castle Console is down at the moment :(</span></h1>
+        </div>
+    </body>
+</html>

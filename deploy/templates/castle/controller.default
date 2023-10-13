@@ -1,0 +1,5 @@
+export CASTLE_ENV=`python $CASTLE_SRC_HOME/deploy/bin/getTag.py $CASTLE_INSTANCE_ID $CASTLE_REGION environment $CASTLE_ENV`
+export NODE_ENV=$CASTLE_ENV
+
+LAUNCHER=coffee
+APP=castle/web/controller/app.coffee

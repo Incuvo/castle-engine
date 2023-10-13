@@ -1,0 +1,572 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Castle API Monitor</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="//extjs.cachefly.net/ext/gpl/4.2.0/resources/css/ext-all.css" rel="stylesheet" />
+    <script type="text/javascript" charset="utf-8" src="//extjs.cachefly.net/ext-4.2.0-gpl/ext-all.js"></script>
+	<script type="text/javascript">
+
+
+var serverTimestamp = {{timestamp}};
+
+Ext.define('incuvo.castle.JsonDateResolutionAdapter',{
+	extend: 'Ext.data.reader.Json',
+});
+
+
+Ext.define('IncuvoSterownia.mainViewport',{
+	extend: 'Ext.container.Viewport',
+
+	initComponent: function() {
+		var self = this;
+		self.callParent(arguments);
+	}
+});
+
+methodsStore = Ext.create('Ext.data.ArrayStore',{
+  fields : ['name'],
+});
+
+incuvo.castle.JsonDateResolutionAdapter.override({
+
+	getResponseData : function(response) {
+
+        try {
+            data = Ext.decode(response.responseText);
+
+            for(entryIdx in data.data) {
+                var metric = data.data[entryIdx];
+
+                var sec = 0
+
+                if (metric.res.s)
+                    sec = metric.res.s
+                else if (metric.res.s5)
+                    sec = metric.res.s5
+                else if (metric.res.s10)
+                    sec = metric.res.s10
+                
+
+                var timestampDate = new Date( Date.UTC((metric.res.y || 1),
+                                        (metric.res.mo || 1) - 1,
+                                        (metric.res.d || 0) ,
+                                        (metric.res.h || 0),
+                                        (metric.res.m || 0),
+                                        sec,
+                0));
+
+
+                metric['timestamp'] = timestampDate.getTime();
+            }
+
+            data.data.sort(function(a, b) { return a.timestamp - b.timestamp } );
+
+            return this.readRecords(data)
+
+        } catch (ex) {
+            error = new Ext.data.ResultSet({
+                total  : 0,
+                count  : 0,
+                records: [],
+                success: false,
+                message: ex.message
+            });
+        
+            this.fireEvent('exception', this, response, error);
+            return error;
+        }
+	}
+});
+
+
+
+
+Ext.define('MetricModel', {
+    extend: 'Ext.data.Model',
+    fields: [
+        {name: 'timestamp', type: 'Number'},
+        {name: 'value'}
+     ]
+});
+
+
+metricStore = Ext.create('Ext.data.Store', {
+	extend: 'Ext.data.Store',
+	model: "MetricModel",
+
+    autoSync: false,
+
+    proxy: {
+        type: 'rest',
+        url: './metrics',
+        reader: new incuvo.castle.JsonDateResolutionAdapter( {
+            type: 'json',
+            root: 'data',
+            successProperty: 'success',
+            messageProperty: 'message'
+        }),
+        noCache: true
+    }
+
+});
+
+
+function loadMetrics(store) {
+
+    if( loadMetrics.locked === true)
+        return;
+
+    store.getProxy().setExtraParam('res',Ext.getCmp('resId').getValue());
+    store.getProxy().setExtraParam('http_method',Ext.getCmp('httpMethodId').getValue());
+    store.getProxy().setExtraParam('http_path',Ext.getCmp('httpPathId').getValue());
+    store.getProxy().setExtraParam('agrFunc',Ext.getCmp('agrFuncId').getValue());
+    store.getProxy().setExtraParam('nodesAgrFunc',Ext.getCmp('nodesAgrFuncId').getValue());
+    store.getProxy().setExtraParam('metric_type',Ext.getCmp('metricTypeId').getValue());
+
+    if( Ext.getCmp('metricTypeId').getValue() != "http") {
+        store.getProxy().setExtraParam('projection_path',Ext.getCmp('generalPathId').getValue());
+    } else {
+        store.getProxy().setExtraParam('projection_path','$value.meter.currentRate');
+    }
+                                       
+
+    var fromTimestamp = new Date(Ext.getCmp('fromDateId').getValue());
+    var toTimestamp   = new Date(Ext.getCmp('toDateId').getValue());
+
+    var fromTime = Ext.getCmp('fromTimeId').getValue();
+    var toTime   = Ext.getCmp('toTimeId').getValue();
+
+    fromTimestamp.setHours(fromTime.getHours());
+    fromTimestamp.setMinutes(fromTime.getMinutes());
+    fromTimestamp.setSeconds(fromTime.getSeconds());
+
+    toTimestamp.setHours(toTime.getHours());
+    toTimestamp.setMinutes(toTime.getMinutes());
+    toTimestamp.setSeconds(toTime.getSeconds());
+
+    //console.log("fron:" + fromTimestamp);
+    //console.log("to:" + toTimestamp);
+
+    store.getProxy().setExtraParam('fromTimestamp', fromTimestamp.getTime());
+    store.getProxy().setExtraParam('toTimestamp', toTimestamp.getTime());
+
+    store.load();
+}
+
+loadMetrics.locked = false;
+
+Ext.onReady(function() {
+
+    var rowEditing = Ext.create('Ext.grid.plugin.RowEditing');
+    
+    var grid = Ext.create('Ext.grid.Panel', {
+        plugins: [rowEditing],
+        frame: true,
+        title: 'Hosts',
+        store: metricStore,
+        iconCls: 'icon-user',
+
+        columns: [{
+            text: 'ID',
+            width: 140,
+            sortable: true,
+            dataIndex: 'timestamp',
+            renderer: function(v){
+                if (Ext.isEmpty(v)) {
+                    v = '&#160;';
+                }
+                return v;
+            }
+        }, {
+            text: 'Source',
+            width: 180,
+            sortable: true,
+            dataIndex: 'source',
+            field: {
+                xtype: 'textfield'
+            }
+        }, 
+        {
+            header: 'Value',
+            width: 180,
+            sortable: true,
+            dataIndex: 'value',
+            field: {
+                xtype: 'textfield'
+            }
+        },         
+        {
+            header: 'Method',
+            width: 180,
+            sortable: true,
+            dataIndex: 'method',
+            field: {
+                xtype: 'textfield'
+            }
+        }
+        ]
+    });
+
+
+
+    
+    var metricChartPanel = Ext.create('widget.panel', {
+        layout: 'fit',
+        tbar: [{
+                text: 'Refresh',
+                handler: function() {
+                    
+
+                    if( Ext.getCmp('trackId').getValue() == true ) {
+
+                        var currentDate = new Date();
+
+                        loadMetrics.locked = true;
+                        //Ext.getCmp('fromDateId').setValue(currentDate);
+                        Ext.getCmp('toTimeId').setValue(currentDate);
+                        loadMetrics.locked = false;
+                    } 
+
+                    loadMetrics(metricStore);
+                }
+            },
+            {
+                id : "trackId",
+                xtype  : 'checkbox',
+                width     : 20,
+                editable    : false,
+                checked : true,
+                onChange: function() {
+                    //loadMetrics(metricStore);
+                }
+            },
+            {
+                id : "metricTypeId",
+                fieldLabel : 'Metric Type',
+                xtype     : 'combo',
+                width     : 150,
+                labelWidth: 70,
+                value     : "http",
+                editable    : false,
+                store     : [],
+                typeAhead: true,
+                onChange: function() {
+                    
+                    if( Ext.getCmp('metricTypeId').getValue() != "http") {
+                        Ext.getCmp('httpMethodId').setVisible(false);
+                        Ext.getCmp('httpPathId').setVisible(false);
+                        Ext.getCmp('generalPathId').setVisible(true);
+                    } else {
+                        Ext.getCmp('httpMethodId').setVisible(true);
+                        Ext.getCmp('httpPathId').setVisible(true);
+                        Ext.getCmp('generalPathId').setVisible(false);
+                    }
+
+                    loadMetrics(metricStore);
+                }
+
+            },
+            
+            {
+                id : "generalPathId",
+                fieldLabel : 'Type',
+                xtype     : 'combo',
+                labelWidth: 30,
+                width     : 200,
+                value     : "$value.mup",
+                hidden    : true,
+                editable  : false,
+                store     : [
+                            ['$value.mup','Memory Usage'],
+                            ['$value.cpu.percent_usage.all','CPU % usage'],
+                            ['$value.cpu.percent_usage.proc','CPU % proc usage'],
+                            ['$value.cpu.percent_usage.user','CPU % user usage'],
+                            ['$value.cpu.percent_usage.sys','CPU % sys usage'],
+                            ['$rtime','Response Time ( Latency )'],
+
+                ],
+                typeAhead: true,
+                onChange: function() {
+                    loadMetrics(metricStore);
+                }
+
+            },
+            {
+                id : "httpMethodId",
+                fieldLabel : 'HTTP method',
+                xtype     : 'combo',
+                width     : 130,
+                labelWidth: 70,
+                value     : "all",
+                editable    : false,
+                store     : [],
+                typeAhead: true,
+                onChange: function() {
+                    loadMetrics(metricStore);
+                }
+
+            },
+            {
+                id : "httpPathId",
+                fieldLabel : 'HTTP path',
+                xtype     : 'combo',
+                labelWidth: 70,
+                width     : 200,
+                value     : "*",
+                editable    : false,
+                store     : [],
+                typeAhead: true,
+                onChange: function() {
+                    loadMetrics(metricStore);
+                }
+
+            },
+            {
+                id : "nodesAgrFuncId",
+                fieldLabel : 'Nodes Aggr.Func',
+                xtype     : 'combo',
+                value     : "sum",
+                width     : 150,
+                labelWidth: 90,
+                editable    : false,
+                store     : [
+                    'avg',
+                    'min',
+                    'max',
+                    'sum'
+                ],
+                onChange: function() {
+                    loadMetrics(metricStore);
+                }
+
+            },
+            {
+                id : "agrFuncId",
+                fieldLabel : 'Aggr.Func',
+                xtype     : 'combo',
+                value     : "avg",
+                width     : 120,
+                labelWidth: 60,
+                editable    : false,
+                store     : [
+                    'avg',
+                    'min',
+                    'max',
+                    'sum'
+                ],
+                onChange: function() {
+                    loadMetrics(metricStore);
+                }
+
+            },
+            {
+                id : "resId",
+                fieldLabel : 'Resolution',
+                xtype     : 'combo',
+                width     : 100,
+                labelWidth: 50,
+                editable    : false,
+                value     : "m",
+                store     : [
+                    's',
+                    's5',
+                    's10',
+                    'm',
+                    'h',
+                    'd',
+                    'm'
+                ],
+                onChange: function() {
+                    loadMetrics(metricStore);
+                }
+
+            },
+            {
+                id : "fromDateId",
+                fieldLabel : 'From',
+                xtype  : 'datefield',
+                width     : 140,
+                labelWidth: 30,
+                editable    : false,
+                value : new Date(serverTimestamp),
+                onChange: function() {
+                    loadMetrics(metricStore);
+                }
+
+            },
+            {
+                id : "fromTimeId",
+                xtype  : 'timefield',
+                width     : 60,
+                labelWidth: 40,
+                increment: 5,
+                editable    : false,
+                value : new Date(serverTimestamp - 1000 * 60 * 5),
+                format : 'H:i',
+                onChange: function() {
+                    loadMetrics(metricStore);
+                }
+
+            },
+            {
+                id : "toDateId",
+                width     : 120,
+                labelWidth: 20,
+                fieldLabel : 'To',
+                xtype  : 'datefield',
+                editable    : false,
+                value : new Date(serverTimestamp),
+                onChange: function() {
+                    loadMetrics(metricStore);
+                }
+
+            },
+            {
+                id : "toTimeId",
+                xtype  : 'timefield',
+                width     : 60,
+                labelWidth: 40,
+                increment: 5,
+                editable    : false,
+                value : new Date(serverTimestamp),
+                format : 'H:i',
+                onChange: function() {
+                    loadMetrics(metricStore);
+                }
+            }
+
+        ],
+        items: {
+            xtype: 'chart',
+            style: 'background:#fff',
+            height: 600,
+            store: metricStore,
+            id: 'chartCmp',
+            axes: [
+                {
+                    type: 'Numeric',
+                    grid: true,
+                    position: 'left',
+                    fields: ['value'],
+                    title: 'Value'
+
+                },
+                {
+                    type: 'Numeric',
+                    position: 'bottom',
+                    fields: ['timestamp'],
+                    title: 'Time',
+                    roundToDecimal: true,
+                    label: {
+                        renderer: function(value) {                
+                            var date = new Date(value);
+                            return Ext.Date.format(date, "H:i:s") + "\n" + Ext.Date.format(date, "M j") ;
+                        }
+                }
+            }
+            ],
+            series: [
+            {
+                type: 'line',
+                axis: ['left', 'bottom'],
+                xField: 'timestamp',
+                yField: 'value',
+                label: {
+                    display: 'none',
+                    field: 'value',
+                },
+                tips: {
+                    trackMouse: true,
+                    width: 200,
+                    height: 40,
+                    renderer: function(storeItem, item) {
+                        this.setTitle(storeItem.get('value') + '<br />' + new Date(storeItem.get('timestamp')));
+                    }
+                }
+
+            }
+
+            ]  
+    } //items
+    });
+
+    new Ext.app.Application({
+        name: 'Castle Monitoring',
+        autoCreateViewport: false,
+        launch: function() {
+
+            Ext.create('IncuvoSterownia.mainViewport',{
+                renderTo: Ext.getBody(),
+                layout: "fit",
+                items: [metricChartPanel]
+            });
+
+
+
+    Ext.Ajax.request({
+        url: './metricsInfo',
+        success: function(response) {
+
+
+            methods = {}
+            paths = {}
+            types = {}
+
+            metricsInfoObj = Ext.decode(response.responseText)
+
+
+            for(data in metricsInfoObj) {
+
+                var infoEntry = metricsInfoObj[data];
+
+                if (infoEntry.method)
+                    methods[infoEntry.method] = 1;
+
+                if (infoEntry.path)
+                    paths[infoEntry.path] = 1;
+
+                if (infoEntry.type)
+                    types[infoEntry.type] = 1;
+            }
+
+            methods = Object.keys(methods);
+            paths = Object.keys(paths);
+            types = Object.keys(types);
+
+            for ( var i = 0, c = methods.length; i < c; i++ ) {
+                methods[i] = [methods[i]];
+            }
+
+            for ( var i = 0, c = paths.length; i < c; i++ ) {
+                paths[i] = [paths[i]];
+            }
+            for ( var i = 0, c = types.length; i < c; i++ ) {
+                types[i] = [types[i]];
+            }
+
+
+            Ext.getCmp('httpMethodId').getStore().loadData(methods);
+            Ext.getCmp('metricTypeId').getStore().loadData(types);
+            Ext.getCmp('httpPathId').getStore().loadData(paths);
+
+        }
+    });
+
+
+
+
+        } //launch
+
+    });
+
+    loadMetrics(metricStore);
+});
+
+
+</script>
+</head>
+<body>
+</body>
+</html>

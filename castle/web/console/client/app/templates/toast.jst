@@ -1,0 +1,9 @@
+<div class="alert{# if (ctx.title != null) { }} alert-block{# } }}{# if (ctx.type != 'warning') { }} alert-{{ ctx.type }}{# } }}">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    {# if (ctx.title != null) { }}
+    <h4>{{ ctx.title }}</h4>
+    {# } }}
+    {# if (ctx.content != null) { }}
+    {{ ctx.content }}
+    {# } }}
+</div>

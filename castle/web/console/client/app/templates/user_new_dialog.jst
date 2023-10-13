@@ -1,0 +1,58 @@
+<div class="modal">
+  <div class="modal-header">
+    <h3>New User</h3>
+
+      <div id="user-new-alert" class="alert alert-error hide">
+        <a class="close" data-dismiss="alert" href="#">×</a>Duplicate username or password!
+      </div>
+
+
+  </div>
+  <div class="modal-body form-stacked">
+
+
+<div class="row-fluid">
+  <div class="span12">
+    <form class="form-horizontal">
+      <div class="control-group">
+        <label class="control-label" for="username">Username</label>
+        <div class="controls">
+          <input id="username" class="input-large" type="text" value=""/>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="email">E-mail</label>
+        <div class="controls">
+          <input id="email" class="input-large" type="text" value=""/>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="password">Password</label>
+        <div class="controls">
+          <input type="password" id="password" class="input-large" name="password" placeholder="password">
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="Roles">Roles</label>
+        <div class="controls">
+        <div id="user-new-roles" class="btn-group" data-toggle="buttons-checkbox">
+            <button type="button" value="user" class="btn btn-primary active">User</button>
+            <button type="button" value="admin" class="btn btn-primary">Admin</button>
+            <button type="button" value="console" class="btn btn-primary">Console</button>
+        </div>
+      </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+  </div>
+  <div class="modal-footer">
+    <button id="user-new-create-btn" class="btn btn-primary">Create</button>
+    <button id="user-new-close-btn" class="btn">Cancel</button>
+  </div>
+</div>
+
+
+
+

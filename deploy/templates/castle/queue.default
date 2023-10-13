@@ -1,0 +1,4 @@
+export GEARMAN_ENV=production
+
+LAUNCHER=python
+APP=castle/queue/main.py

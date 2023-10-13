@@ -1,0 +1,95 @@
+#!/bin/bash
+
+### BEGIN INIT INFO
+# Provides:          stud
+# Required-Start:    $local_fs $remote_fs
+# Required-Stop:     $local_fs $remote_fs
+# Should-Start:      $network
+# Should-Stop:       $network
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Daemonized version of stud for stud.
+# Description:       Starts the stud daemon with config file as specified in
+#                    /etc/default/stud.
+### END INIT INFO
+
+DAEMON=/usr/local/bin/stud
+NAME=stud
+PIDFILE=/var/run/$NAME.pid
+
+[ -x $DAEMON ] || exit 0
+
+# Read configuration variable file if it is present
+[ -r /etc/default/$NAME ] && . /etc/default/$NAME
+
+start() {
+    start-stop-daemon --start --pidfile $PIDFILE --make-pidfile \
+            --background --exec $DAEMON -- --config=$CONFIG \
+            || return 2
+}
+
+stop() {
+    start-stop-daemon --stop --quiet --retry=TERM/10/KILL/5 --pidfile $PIDFILE --name $NAME
+    rm -f $PIDFILE
+
+    RETVAL="$?"
+    [ "$RETVAL" = 2 ] && echo "Could not stop $NAME"
+
+    return "$RETVAL"
+}
+
+status() {
+    start-stop-daemon --status --pidfile $PIDFILE --user $USER --exec $DAEMON --name $NAME
+
+    return $?
+}
+
+case "$1" in
+    status)
+        status
+
+        case "$?" in
+            0)
+                echo "[$NAME] Running" ;;
+            1)
+                echo "[$NAME] Not running, but PID file exists" ;;
+            3)
+                echo "[$NAME] Not running" ;;
+            4)
+                echo "[$NAME] Unable to determine status" ;;
+            *)
+                echo "[$NAME] Unknown return code from start-stop-daemon" ;;
+        esac ;;
+    start)
+        start
+
+        case "$?" in
+            0|1) echo "[$NAME] Up and running" ;;
+            *)   echo "[$NAME] Failed to start the service" ;;
+        esac ;;
+    stop)
+        stop
+
+        case "$?" in
+            0|1) echo "[$NAME] Stopped" ;;
+            *)   echo "[$NAME] Failed to stop the service" ;;
+        esac ;;
+    restart|force-reload)
+        do_stop
+
+        case "$?" in
+            0|1)
+                do_start
+
+                case "$?" in
+                    0|1) echo "[$NAME] Restarted" ;;
+                    *)   echo "[$NAME] Failed to restart the service" ;;
+                esac ;;
+            *)
+                echo "[$NAME] Failed to stop the service" ;;
+        esac ;;
+    *)
+        echo "Usage: $0 {status|start|stop|restart|force-reload}" >&2
+        exit 3
+        ;;
+esac

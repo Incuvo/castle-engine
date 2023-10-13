@@ -1,0 +1,101 @@
+<section id="levels">
+  <header>
+    <div class="pull-right">
+      <button id="levels-delete-btn" class="btn btn-danger">Delete</button>
+      <button id="refresh-btn" class="btn"><i class="icon-refresh"></i> Refresh</button>
+      <button id="new-level-btn" class="btn"><i class="icon-user"></i>New Level</button>
+    </div>
+    <h1>Levels <span id="levels-total" class="muted hide"></span></h1>
+  </header>
+  <div class="row-fluid">
+    <div id="levels-list" class="span8 panel-left"></div>
+    <form class="span4">
+
+
+      <div class="control-group">
+        <label class="control-label" for="filter-any">Any Search</label>
+        <div class="controls">
+          <input id="filter-any" class="input-large" type="text" value="{{ ctx.filters.any }}" placeholder="text"/>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="filter-name">Name</label>
+        <div class="controls">
+          <input id="filter-name" class="input-large" type="text" value="{{ ctx.filters.name }}" placeholder="name"/>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="filter-description">Description</label>
+        <div class="controls">
+          <input id="filter-description" class="input-large" type="text" value="{{ ctx.filters.description }}" placeholder="description"/>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="filter-tags">Tags</label>
+        <div class="controls">
+          <input id="filter-tags" class="input-large" type="text" value="{{ ctx.filters.tag }}" placeholder="tag1|tag2"/>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="filter-flags">Flags</label>
+        <div class="controls">
+          <input id="filter-flags" class="input-large" type="text" value="{{ ctx.filters.flag }}" placeholder="flag1|flag2"/>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="filter-owner">Owner</label>
+        <div class="controls">
+          <input id="filter-owner" class="input-large" type="text" value="{{ ctx.filters.owner_name }}" placeholder="type user name"/>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="filter-visibility">Visibility</label>
+        <div class="controls">
+          <select id="filter-visibility" class="input-large" style="width: 230px">
+            <option value="private|friends|public|story"{# if (ctx.filters.visibility == 'private|filter|public|story') { }} selected{# } }}>All</option>
+            <option value="private"{# if (ctx.filters.visibility == 'private') { }} selected{# } }}>Private</option>
+            <option value="friends"{# if (ctx.filters.visibility == 'friends') { }} selected{# } }}>Friends</option>
+            <option value="public"{# if (ctx.filters.visibility == 'public') { }} selected{# } }}>Public</option>
+            <option value="story"{# if (ctx.filters.visibility == 'story') { }} selected{# } }}>Story</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="filter-visibility">Sort By</label>
+        <div class="controls">
+          <select id="filter-sortby" class="input-large" style="width: 230px">
+            <option value="created"{# if (ctx.filters.sortby == 'created') { }} selected{# } }}>Created</option>
+            <option value="updated"{# if (ctx.filters.sortby == 'updated') { }} selected{# } }}>Updated</option>
+            <option value="tags"{# if (ctx.filters.sortby == 'tags') { }} selected{# } }}>Tags</option>
+            <option value="gameplay"{# if (ctx.filters.sortby == 'gameplay') { }} selected{# } }}>Gameplay</option>
+            <option value="flags"{# if (ctx.filters.sortby == 'flags') { }} selected{# } }}>Flags</option>
+            <option value="stats.comments"{# if (ctx.filters.sortby == 'stats.comments') { }} selected{# } }}>Comments</option>
+            <option value="stats.plays"{# if (ctx.filters.sortby == 'stats.plays') { }} selected{# } }}>Plays</option>
+            <option value="stats.downloads"{# if (ctx.filters.sortby == 'stats.downloads') { }} selected{# } }}>Downloads</option>
+            <option value="stats.likes"{# if (ctx.filters.sortby == 'stats.likes') { }} selected{# } }}>Likes</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="filter-visibility">Sort Order</label>
+        <div class="controls">
+          <select id="filter-sortorder" class="input-large" style="width: 230px">
+            <option value="-" {# if (ctx.filters.sortorder == '-') { }} selected{# } }}>Descending</option>
+            <option value=""{# if (ctx.filters.sortorder == '') { }} selected{# } }}>Ascending</option>
+          </select>
+        </div>
+      </div>
+
+
+
+      <button id="filter-btn" class="btn btn-primary" type="button" style="width: 230px">Filter</button>
+    </form>
+  </div>
+</section>

@@ -1,0 +1,17 @@
+/* the humans responsible & colophon */
+/* humanstxt.org */
+
+/* Tooploox */
+  Company: Tooploox, Inc.
+  Contact: hello@tooploox.com
+  Site: http://tooploox.com
+  Twitter: @tooploox
+  Location: Wrocław, Poland
+
+/* THANKS */
+  Name: You and all the awesome people contributing to Open Source!
+
+/* SITE */
+  "Standards": CoffeeScript
+  Components: Node.js, Express, Mongoose, Node-Redis, Underscore, Underscore.string, Node-Gearman, Awssum
+  Software: Vim

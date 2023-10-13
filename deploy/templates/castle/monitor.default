@@ -1,0 +1,2 @@
+LAUNCHER=python
+APP=castle/monitor/app.py $CASTLE_REGION $CASTLE_REGION $CASTLE_ENV

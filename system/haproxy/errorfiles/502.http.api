@@ -1,0 +1,13 @@
+HTTP/1.0 502 Bad Gateway
+Cache-Control: no-cache
+Connection: close
+Content-Type: application/json
+
+{
+    "error": {
+        "type": "BAD_GATEWAY",
+        "description": "Castle API is experiencing some problems. Try again in a minute or two. Thanks!",
+        "uri": null,
+        "data": null
+    }
+}

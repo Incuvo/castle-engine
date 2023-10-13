@@ -1,0 +1,47 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          castle_api_update 
+# Required-Start:    $local_fs $remote_fs $networking
+# Required-Stop:     $local_fs $remote_fs $networking
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Starts castle update 
+# Description:       Starts updating castle
+### END INIT INFO
+
+# Based on the /etc/init.d/skeleton script in Debian.
+
+# Do NOT "set -e"
+
+PATH=/usr/local/bin:/sbin:/usr/sbin:/bin:/usr/bin
+DESC="Run a set of applications as daemons."
+NAME=castle_api_update
+SCRIPTNAME=/etc/init.d/$NAME
+
+# Read configuration variable file if it is present
+[ -r /etc/default/$NAME ] && . /etc/default/$NAME
+
+# Load the VERBOSE setting and other rcS variables
+. /lib/init/vars.sh
+
+# Define LSB log_* functions.
+# Depend on lsb-base (>= 3.0-6) to ensure that this file is present.
+. /lib/lsb/init-functions
+
+
+case "$1" in
+  start)
+    echo ">> Castle API src update:`date -u`" > /var/log/castle/boot-update.log
+    fab -f /home/castle/src/deploy/fabfile_update.py update_castle_src -H 127.0.0.1 -u $CASTLE_UPDATE_USER -i /home/$CASTLE_UPDATE_USER/.ssh/local_deploy >> /var/log/castle/boot-update.log 2>&1
+    echo ">> Castle API update and install :`date -u`" >> /var/log/castle/boot-update.log
+    fab -f /home/castle/src/deploy/fabfile.py install_or_update_castle_api:updateSource=False,requireStarted=False -H 127.0.0.1 -u $CASTLE_UPDATE_USER -i /home/$CASTLE_UPDATE_USER/.ssh/local_deploy >> /var/log/castle/boot-update.log 2>&1
+	;;
+  stop)
+	;;
+  *)
+	echo "Usage: $SCRIPTNAME {start|stop}" >&2
+	exit 3
+	;;
+esac
+
+:

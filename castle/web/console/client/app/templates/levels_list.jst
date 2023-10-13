@@ -1,0 +1,20 @@
+{# if (ctx.levels.length) { }}
+<ul id="levels-list" class="media-list">
+
+<li id="level-select-all" class="media">
+  <div class="media-body">
+    <button id="levels-select-all-btn" class="btn btn-primary" data-toggle="button" >Select all</button>
+  </div>
+</li>
+
+{# ctx.levels.forEach(function(level) { }}
+  {{ ctx.templates.item({level: level}) }}
+{# }) }}
+
+</ul>
+<div class="pagination-centered">
+  <button id="more-btn" class="btn{# if (ctx.levels.pagination.itemsTotal == ctx.levels.length) { }} hide{# } }}"><i class="icon-double-angle-down"></i> More</button>
+</div>
+{# } else { }}
+<p class="info pagination-centered">No levels found.</p>
+{# } }}

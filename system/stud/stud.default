@@ -1,0 +1,3 @@
+USER="stud"
+GROUP="stud"
+CONFIG="/etc/stud/stud.cfg"

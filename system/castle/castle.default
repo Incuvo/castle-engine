@@ -1,0 +1,4 @@
+CASTLE_ENV_HOME=/home/castle/env/castle.com
+CASTLE_SRC_HOME=/home/castle/src
+
+USER=castle

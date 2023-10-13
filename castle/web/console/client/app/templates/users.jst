@@ -1,0 +1,27 @@
+<section id="users">
+  <header>
+    <div class="pull-right">
+      <button id="refresh-btn" class="btn"><i class="icon-refresh"></i>Refresh</button>
+      <button id="new-user-btn" class="btn"><i class="icon-user"></i>New User</button>
+    </div>
+    <h1>Users <span id="users-total" class="muted hide"></span></h1>
+  </header>
+  <div class="row-fluid">
+    <div id="users-list" class="span8 panel-left"></div>
+    <form class="span4">
+      <div class="control-group">
+        <label class="control-label" for="filter-email">E-mail</label>
+        <div class="controls">
+          <input id="filter-email" class="input-large" type="text" value="{{ ctx.filters.email }}" placeholder="bro@castle.com"/>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="filter-username">Username</label>
+        <div class="controls">
+          <input id="filter-username" class="input-large" type="text" value="{{ ctx.filters.username }}" placeholder="brocoder"/>
+        </div>
+      </div>
+      <button id="filter-btn" class="btn btn-primary" type="button" style="width: 230px">Filter</button>
+    </form>
+  </div>
+</section>

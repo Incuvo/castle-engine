@@ -1,0 +1,46 @@
+<div class="row-fluid">
+
+    <div class="span2">
+        <div class="kpi">{{ ctx.stats.users.users.total }}</div>
+        <div><small>total users</small></div>
+    </div>
+    <div class="span2">
+        <div class="kpi">{{ ctx.stats.levels.levels.total }}</div>
+        <div><small>total levels</small></div>
+    </div>
+    <div class="span2">
+        <div class="kpi">{{ ctx.stats.levels.downloads }}</div>
+        <div><small>total downloads</small></div>
+    </div>
+    <div class="span2">
+        <div class="kpi">{{ ctx.stats.levels.comments }}</div>
+        <div><small>total comments</small></div>
+    </div>
+    <div class="span2">
+        <div class="kpi">{{ ctx.stats.levels.likes }}</div>
+        <div><small>total likes</small></div>
+    </div>
+    <div class="span2">
+        <div class="kpi">{{ ctx.stats.levels.plays }}</div>
+        <div><small>total plays</small></div>
+    </div>
+    <div class="span2">
+        <div class="kpi">{{ ctx.stats.levels.panics }}</div>
+        <div><small>total panics</small></div>
+    </div>
+
+</div>
+{# _.each([{cat: 'downloaded', stat: 'downloads'}, {cat: 'played', stat: 'plays'}, {cat: 'commented', stat: 'comments'}, {cat: 'liked', stat: 'likes'},{cat: 'panic', stat: 'panics'}], function(data) { }}
+<div class="sub-header">
+    <h2>Most {{ data.cat }}</h2>
+</div>
+<div class="row-fluid row-fluid-alternate-bg">
+    <div class="span12">
+        <ul class="numbered-list">
+            {# _.each(ctx.stats.levels.levels['most_' + data.cat], function(level) { }}
+            <li><strong>{{ level[data.stat] }}</strong><a class="level-link" href="/levels/{{ level.id }}" data-c-uri="levels/{{ level.id }}">{{- level.name }}</a>
+            {# }); }}
+        </ul>
+    </div>
+</div>
+{# }); }}

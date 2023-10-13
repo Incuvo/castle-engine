@@ -1,0 +1,9 @@
+CASTLE_ENV_HOME=/home/castle/env/castle.com
+CASTLE_SRC_HOME=/home/castle/src
+                   
+CASTLE_ENV=${CASTLE_ENV:=production}
+CASTLE_REGION=${CASTLE_REGION:=`type -P ec2metadata &>/dev/null && ec2metadata --availability-zone | grep -Po "(us|sa|eu|ap)-(north|south)?(east|west)?-[0-9]+" || echo "local"`}
+CASTLE_INSTANCE_ID=`type -P ec2metadata &>/dev/null && ec2metadata --instance-id || echo "local"`
+
+USER=castle
+

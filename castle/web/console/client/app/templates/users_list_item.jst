@@ -1,0 +1,16 @@
+<li id="user-{{ ctx.user.id}}" class="media">
+  <a class="pull-left thumbnail" href="/users/{{ ctx.user.id }}" data-c-uri="users/{{ ctx.user.id }}">
+    {# var thumbnailUrl = ctx.user.has('thumbnails') ? 'https://' + ctx.user.get('thumbnails')['256'] : "/assets/images/placeholder_60.png" }}
+    <img class="media-object" src="{{ thumbnailUrl }}" width=60 height=60>
+  </a>
+  <div class="media-body">
+    {# var email = ctx.user.get('email'), username = ctx.user.get('username'); }}
+    <h4 class="media-heading">
+        <a class="login" href="/users/{{ ctx.user.id }}" data-c-uri="users/{{ ctx.user.id }}">{# if (username) { }}{{- username }}{# } else { }}{{- email }}{# } }}</a>
+        <span class="login-secondary muted">{# if (username && email) { }}({{- email }}){# } }}</span>
+        <a href="/users/{{ ctx.user.id }}" data-c-uri="users/{{ctx.user.id}}/levels" title="Show levels"><i class="icon-folder-close"></i></a>
+    </h4>
+    {# var roles = ctx.user.get('roles') || [] }}
+    <p>{# for (var i = 0, len = roles.length; i < len; i++) { }}<span class="label{# if (roles[i] == 'admin') { }} label-important{# } }}">{{ roles[i] }}</span> {# } }}</p>
+  </div>
+</li>

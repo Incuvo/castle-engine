@@ -1,0 +1,88 @@
+<div class="modal">
+  <div class="modal-header">
+    <h3>New Level</h3>
+      <div id="level-new-alert" class="alert alert-error hide">
+        <a class="close" data-dismiss="alert" href="#">×</a>Duplicate levelname!
+      </div>
+  </div>
+  <div class="modal-body form-stacked">
+
+<div class="row-fluid">
+  <div class="span12">
+    <form id="new-level-form" data-remote="true" method="post" enctype="multipart/form-data"  class="form-horizontal">
+
+      <div class="control-group">
+        <label class="control-label" for="name">Name</label>
+        <div class="controls">
+          <input id="level-name" class="input-large" type="text" value=""/>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="description">Description</label>
+        <div class="controls">
+          <input id="level-description" class="input-large" type="text" value=""/>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="gameplay">Gameplay</label>
+        <div class="controls">
+          <input id="level-gameplay" class="input-large" type="text" value=""/>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="tags">Tags</label>
+        <div class="controls">
+          <input id="level-tags" class="input-large" type="text" value=""/>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="flags">Flags</label>
+        <div class="controls">
+          <input id="level-flags" class="input-large" type="text" value=""/>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="level-owner">Owner</label>
+        <div class="controls">
+          <input id="level-owner" class="input-large" type="text" value=""/>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="visibility">Visibility</label>
+        <div class="controls"> 
+        <div id="level-visibility" class="btn-group" data-toggle="buttons-radio">
+            <button type="button" value="private" class="btn btn-primary active">Private</button>
+            <button type="button" value="friends" class="btn btn-primary">Friends</button>
+            <button type="button" value="public" class="btn btn-primary">Public</button>
+            <button type="button" value="story" class="btn btn-primary">Story</button>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="levelData">Level Data</label>
+        <div class="controls"> 
+            <input id="level-file" class="input-large" type="file" multiple />
+        </div>
+      </div>
+
+      </div>
+    </form>
+  </div>
+</div>
+
+  </div>
+  <div class="modal-footer">
+    <button id="level-new-create-btn" class="btn btn-primary">Create</button>
+    <button id="level-new-close-btn" class="btn">Cancel</button>
+  </div>
+</div>
+
+
+
+

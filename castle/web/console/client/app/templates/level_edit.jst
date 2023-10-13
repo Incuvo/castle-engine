@@ -1,0 +1,91 @@
+<div class="row-fluid">
+  <div class="span8">
+    <form class="form-horizontal">
+      <div class="control-group">
+        <label class="control-label" for="name">Name</label>
+        <div class="controls">
+          <input id="name" class="input-large" type="text" value="{{ ctx.level.get('name') }}"/>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="description">Description</label>
+        <div class="controls">
+          <textarea id="description" class="input-large" rows="3">{{ ctx.level.get('description') }}</textarea>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="gameplay">Gameplay</label>
+        <div class="controls">
+          <input id="gameplay" class="input-large" type="text" value="{{ ctx.level.get('gameplay') }}"/>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="visibility">Visibility</label>
+        <div class="controls">
+          <select id="visibility" class="input-large">
+            {# var visibility = ctx.level.get('visibility') }}
+            <option value="private"{# if (visibility == 'private') { }} selected{# } }}>Private</option>
+            <option value="friends"{# if (visibility == 'friends') { }} selected{# } }}>Friends</option>
+            <option value="public"{# if (visibility == 'public') { }} selected{# } }}>Public</option>
+            <option value="story"{# if (visibility == 'story') { }} selected{# } }}>Story</option>
+          </select>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="tags">Tags</label>
+        <div class="controls">
+          {# var tags = ctx.level.get('tags') || [] }}
+          <input id="tags" class="input-large" type="text" value="{{ tags.join(', ') }}" placeholder="Comma-separated list of tags"/>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="flags">Flags</label>
+        <div class="controls">
+          {# var flags = ctx.level.get('flags') || [] }}
+          <input id="flags" class="input-large" type="text" value="{{ flags.join(', ') }}" placeholder="Comma-separated list of flags"/>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="level-owner">Owner</label>
+        <div class="controls">
+          <input id="level-owner" class="input-large" type="text" value="{{ctx.level.get('owner').username}}"/>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="levelData">Level Data</label>
+        <div class="controls"> 
+            <input id="level-file" class="input-large" type="file" />
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label" for="thumbnail">Thumbnail image</label>
+        <div class="controls"> 
+            <input accept="image/*" id="level-thumbnail-file" class="input-large" type="file" />
+        </div>
+      </div>
+
+    </form>
+  </div>
+  <div class="span4">
+    <div class="thumbnail">
+        {# var thumbnailUrl = ctx.level.has('thumbnails') ? 'https://' + ctx.level.get('thumbnails')['default'] : "/assets/images/placeholder_256.png" }}
+        <img id="thumbnail-image" src="{{ thumbnailUrl }}" width=256 height=256/>
+        <ul class="caption unstyled">
+            {# var stats = { downloads : ctx.level.get('downloads'), likes : ctx.level.get('likes') , comments: ctx.level.get('comments') , plays : ctx.level.get('plays'), panics : ctx.level.get('panics')}; }}
+            <li>Downloads <span class="badge badge-inverse pull-right" title="Downloads">{{ stats.downloads }}</span>
+            <li>Likes <span class="badge badge-important pull-right" title="Likes">{{ stats.likes }}</span>
+            <li>Comments <span class="badge badge-success pull-right" title="Comments">{{ stats.comments }}</span>
+            <li>Games played <span class="badge badge-info pull-right" title="Games played">{{ stats.plays }}</span>
+            <li>Games panics <span class="badge badge-warning pull-right" title="Games played">{{ stats.panics }}</span>
+        </ul>
+    </div>
+  </div>
+</div>
+<div class="form-actions">
+  <button id="save-btn" class="btn btn-primary">Save changes</button>
+  <button id="cancel-btn" class="btn">Cancel</button>
+  <button id="delete-btn" class="btn btn-danger pull-right">Delete forever</button>
+</div>
